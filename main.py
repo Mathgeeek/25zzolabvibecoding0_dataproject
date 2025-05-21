@@ -4,26 +4,6 @@ import requests
 from datetime import datetime, timedelta
 import plotly.express as px
 
-
-# 1. Google Fonts를 link 태그로 먼저 불러오기
-st.markdown("""
-<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang&family=Noto+Serif+KR:wght@200..900&family=Poor+Story&display=swap" rel="stylesheet">
-""", unsafe_allow_html=True)
-
-# 2. font-family CSS 적용 (셀렉터를 좀 더 넓게!)
-st.markdown("""
-<style>
-html, body, [class^="css"]  {
-    font-family: 'Gowun Batang', 'Noto Serif KR', 'Poor Story', serif !important;
-}
-</style>
-""", unsafe_allow_html=True)
-
-st.title("폰트 적용 확인 예시")
-st.write("이 텍스트가 'Gowun Batang' 또는 'Noto Serif KR' 폰트로 보이면 성공입니다!")
-
-
-
 st.title("GitHub 인기 레포지토리 TOP 10 (최근 1주일, Python)")
 
 # secrets에 저장된 토큰 불러오기
