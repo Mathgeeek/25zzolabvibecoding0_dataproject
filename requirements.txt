@@ -1,6 +1,4 @@
 streamlit
-folium
-plotly
 pandas
-streamlit_folium
-yfinance
+requests
+plotly
