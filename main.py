@@ -7,10 +7,14 @@ import plotly.express as px
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Gowun+Batang&family=Noto+Serif+KR:wght@200..900&family=Poor+Story&display=swap');
-    html, body, [class*="css"]  {
-        font-family: 'Gowun Batang', serif !important;
+    html, body, .stApp {
+        font-family: 'Gowun Batang', 'Noto Serif KR', 'Poor Story', serif !important;
+    }
     </style>
     """, unsafe_allow_html=True)
+
+st.title("폰트 적용 확인 예시")
+st.write("이 텍스트가 'Gowun Batang' 또는 'Noto Serif KR' 폰트로 보이면 성공입니다!")
 
 
 st.title("GitHub 인기 레포지토리 TOP 10 (최근 1주일, Python)")
