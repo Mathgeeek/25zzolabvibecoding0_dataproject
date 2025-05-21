@@ -8,7 +8,7 @@ st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Gowun+Batang&family=Noto+Serif+KR:wght@200..900&family=Poor+Story&display=swap');
     html, body, [class*="css"]  {
-        font-family: 'Gowun Batang', sans-serif !important;
+        font-family: 'Gowun Batang', serif !important;
     </style>
     """, unsafe_allow_html=True)
 
