@@ -4,6 +4,25 @@ import requests
 from datetime import datetime, timedelta
 import plotly.express as px
 
+# 1. font-face 선언: 앱 내 상대경로로 지정
+st.markdown("""
+<style>
+@font-face {
+    font-family: 'Gowun Batang';
+    src: url('fonts/GowunBatang-Regular.ttf') format('ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+html, body, [class^="css"] {
+    font-family: 'Gowun Batang', serif !important;
+}
+</style>
+""", unsafe_allow_html=True)
+
+st.title("내부 폰트 적용 예시")
+st.write("이 텍스트가 'Noto Serif KR' 폰트로 보이면 성공입니다!")
+
+
 st.title("GitHub 인기 레포지토리 TOP 10 (최근 1주일, Python)")
 
 # secrets에 저장된 토큰 불러오기
