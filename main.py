@@ -1,26 +1,47 @@
 import streamlit as st
-import folium
-from streamlit_folium import st_folium
+import pandas as pd
+import requests
+from datetime import datetime, timedelta
+import plotly.express as px
 
-st.title("🗺️ 나만의 위치 북마크 지도")
+st.title("GitHub 인기 레포지토리 TOP 10 (최근 1주일, Python)")
 
-st.write("아래에 장소 정보를 입력하고 지도에 표시해보세요!")
+# secrets에 저장된 토큰 불러오기
+token = st.secrets["GITHUB_TOKEN"]
 
-# 장소 입력
-place = st.text_input("장소 이름", value="서울 시청")
-lat = st.number_input("위도 (Latitude)", value=37.5665, format="%.6f")
-lon = st.number_input("경도 (Longitude)", value=126.9780, format="%.6f")
+def get_github_trending_repos(token, language='python', top_n=10):
+    last_week = (datetime.now() - timedelta(days=7)).strftime('%Y-%m-%d')
+    url = "https://api.github.com/search/repositories"
+    headers = {"Authorization": f"token {token}"}
+    params = {
+        "q": f"language:{language} created:>{last_week}",
+        "sort": "stars",
+        "order": "desc",
+        "per_page": top_n
+    }
+    r = requests.get(url, headers=headers, params=params)
+    if r.status_code != 200:
+        st.error("API 호출 에러: " + str(r.text))
+        return pd.DataFrame()
+    items = r.json().get("items", [])
+    data = []
+    for repo in items:
+        data.append({
+            "이름": repo["full_name"],
+            "설명": repo["description"],
+            "Stars": repo["stargazers_count"],
+            "Forks": repo["forks_count"],
+            "링크": repo["html_url"]
+        })
+    return pd.DataFrame(data)
 
-# 세션 상태 저장
-if "places" not in st.session_state:
-    st.session_state.places = []
-
-if st.button("지도에 추가하기"):
-    st.session_state.places.append((place, lat, lon))
-
-# 지도 그리기
-m = folium.Map(location=[37.5665, 126.9780], zoom_start=6)
-for name, lat, lon in st.session_state.places:
-    folium.Marker([lat, lon], tooltip=name).add_to(m)
-
-st_folium(m, width=700, height=500)
+df = get_github_trending_repos(token)
+if not df.empty:
+    st.dataframe(df)
+    fig = px.bar(df, x="이름", y="Stars", hover_data=["설명"], title="TOP 10 Star 레포지토리")
+    st.plotly_chart(fig)
+    st.markdown("---")
+    for i, row in df.iterrows():
+        st.markdown(f"- [{row['이름']}]({row['링크']}): ⭐ {row['Stars']} | {row['설명']}")
+else:
+    st.info("데이터를 불러올 수 없습니다. 토큰과 API 상태를 확인하세요.")
