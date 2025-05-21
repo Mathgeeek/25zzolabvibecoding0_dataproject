@@ -4,6 +4,15 @@ import requests
 from datetime import datetime, timedelta
 import plotly.express as px
 
+st.markdown("""
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Gowun+Batang&family=Noto+Serif+KR:wght@200..900&family=Poor+Story&display=swap');
+    html, body, [class*="css"]  {
+        font-family: 'Gowun Batang', sans-serif !important;
+    </style>
+    """, unsafe_allow_html=True)
+
+
 st.title("GitHub 인기 레포지토리 TOP 10 (최근 1주일, Python)")
 
 # secrets에 저장된 토큰 불러오기
