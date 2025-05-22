@@ -1,6 +1,3 @@
-# 메인 페이지
-# 페이지 이름: 🏠 대시보드
-
 import streamlit as st
 import pandas as pd
 import requests
