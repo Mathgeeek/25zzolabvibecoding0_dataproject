@@ -5,13 +5,11 @@ from datetime import datetime, timedelta
 import plotly.express as px
 
 st.set_page_config(layout="wide")
+st.title("Python 인기 레포지토리 TOP 1 - 기여자별 커밋 수 분포")
 
-st.title("Python 인기 repository TOP 10 - 이슈 버블 차트(Bubble Chart)")
-
-# GitHub 토큰은 secrets에서 불러옴 (Streamlit Cloud 권장 방식)
 token = st.secrets["GITHUB_TOKEN"]
 
-def get_top_repos_and_issues(token, language='python', top_n=10):
+def get_top_repo(token, language='python'):
     last_week = (datetime.now() - timedelta(days=7)).strftime('%Y-%m-%d')
     url = "https://api.github.com/search/repositories"
     headers = {"Authorization": f"token {token}"}
@@ -19,49 +17,45 @@ def get_top_repos_and_issues(token, language='python', top_n=10):
         "q": f"language:{language} created:>{last_week}",
         "sort": "stars",
         "order": "desc",
-        "per_page": top_n
+        "per_page": 1
     }
     r = requests.get(url, headers=headers, params=params)
     items = r.json().get("items", [])
+    if items:
+        return items[0]["full_name"], items[0]["html_url"]
+    return None, None
+
+def get_contributors(token, repo_full_name, top_n=10):
+    url = f"https://api.github.com/repos/{repo_full_name}/contributors"
+    headers = {"Authorization": f"token {token}"}
+    params = {"per_page": top_n}
+    r = requests.get(url, headers=headers, params=params)
+    contributors = r.json()
     data = []
-    for repo in items:
+    for user in contributors:
         data.append({
-            "이름": repo["full_name"],
-            "Stars": repo["stargazers_count"],
-            "오픈이슈수": repo["open_issues_count"],
-            "Forks": repo["forks_count"],
-            "설명": repo["description"],
-            "링크": repo["html_url"]
+            "기여자": user["login"],
+            "커밋수": user["contributions"],
+            "프로필": user["html_url"]
         })
     return pd.DataFrame(data)
 
-df = get_top_repos_and_issues(token)
-st.dataframe(df)
-
-st.markdown("## ⭐️ Bubble Chart: repository Stars, Issues, Forks")
-
-fig = px.scatter(
-    df,
-    x="Stars",
-    y="오픈이슈수",
-    size="Forks",
-    color="이름",
-    hover_name="이름",
-    hover_data=["설명", "링크"],
-    title="Python TOP 10 레포지토리: Stars vs Open Issues (Bubble Chart)",
-    size_max=60,
-)
-
-fig.update_layout(
-    xaxis_title="Stars (별 개수)",
-    yaxis_title="Open Issues (오픈 이슈 개수)"
-)
-
-st.plotly_chart(fig, use_container_width=True)
-
-# TOP 3 오픈이슈수 순위 표기
-st.markdown("### 🔥 오픈 이슈가 많은 TOP 3")
-for i, row in df.sort_values(by="오픈이슈수", ascending=False).head(3).iterrows():
-    st.markdown(f"- [{row['이름']}]({row['링크']}): 오픈 이슈 {row['오픈이슈수']}건, ⭐️ {row['Stars']}")
-
-
+repo_full_name, repo_url = get_top_repo(token)
+if repo_full_name:
+    st.markdown(f"**TOP 1 Python 레포지토리:** [{repo_full_name}]({repo_url})")
+    df_contrib = get_contributors(token, repo_full_name, top_n=15)
+    st.dataframe(df_contrib)
+    fig = px.bar(
+        df_contrib,
+        x="기여자",
+        y="커밋수",
+        hover_data=["프로필"],
+        title=f"{repo_full_name}의 기여자별 커밋 수 (상위 15명)",
+        color="기여자"
+    )
+    st.plotly_chart(fig, use_container_width=True)
+    st.markdown("#### 🏆 TOP 기여자")
+    for i, row in df_contrib.sort_values(by="커밋수", ascending=False).head(3).iterrows():
+        st.markdown(f"- [{row['기여자']}]({row['프로필']}): {row['커밋수']}회 커밋")
+else:
+    st.warning("레포지토리를 찾을 수 없습니다.")
