@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 import plotly.express as px
 
 st.set_page_config(layout="wide")
-st.title("Python 인기 레포지토리 TOP 1 - 기여자별 커밋 수 분포")
+st.title("Python Best repository - 기여자별 커밋 수 분포")
 
 token = st.secrets["GITHUB_TOKEN"]
 
@@ -42,7 +42,7 @@ def get_contributors(token, repo_full_name, top_n=10):
 
 repo_full_name, repo_url = get_top_repo(token)
 if repo_full_name:
-    st.markdown(f"**TOP 1 Python 레포지토리:** [{repo_full_name}]({repo_url})")
+    st.markdown(f"**Best Python repository : ** [{repo_full_name}]({repo_url})")
     df_contrib = get_contributors(token, repo_full_name, top_n=15)
     st.dataframe(df_contrib)
     fig = px.bar(
@@ -50,7 +50,7 @@ if repo_full_name:
         x="기여자",
         y="커밋수",
         hover_data=["프로필"],
-        title=f"{repo_full_name}의 기여자별 커밋 수 (상위 15명)",
+        title=f"{repo_full_name}의 기여자별 커밋 수",
         color="기여자"
     )
     st.plotly_chart(fig, use_container_width=True)
