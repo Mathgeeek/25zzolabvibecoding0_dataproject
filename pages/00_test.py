@@ -57,16 +57,19 @@ if repo_full_name:
     )
     st.plotly_chart(fig, use_container_width=True)
     
-    st.markdown("#### 🏆 TOP 3 기여자 (프로필 사진 포함)")
-    top3 = df_contrib.sort_values(by="커밋수", ascending=False).head(3)
-    for i, row in top3.iterrows():
+  st.markdown("#### 🏆 TOP 3 기여자")
+
+top3 = df_contrib.sort_values(by="커밋수", ascending=False).head(3)
+cols = st.columns(3)  # 3개의 열 생성
+
+for i, row in enumerate(top3.itertuples()):
+    with cols[i]:
+        st.image(row.avatar_url, width=64)
         st.markdown(
-            f'<div style="display:flex;align-items:center;margin-bottom:1em">'
-            f'<img src="{row["avatar_url"]}" width="48" style="border-radius:50%;margin-right:12px">'
-            f'<a href="{row["프로필"]}" target="_blank" style="font-size:1.1em;font-weight:bold">{row["기여자"]}</a>'
-            f'<span style="margin-left:12px;font-size:1em">({row["커밋수"]}회 커밋)</span>'
-            f'</div>',
+            f"<a href='{row.프로필}' target='_blank'><b>{row.기여자}</b></a>",
             unsafe_allow_html=True
         )
+        st.write(f"{row.커밋수}회 커밋")
+
 else:
     st.warning("레포지토리를 찾을 수 없습니다.")
