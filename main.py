@@ -4,11 +4,11 @@ import requests
 from datetime import datetime, timedelta
 import plotly.express as px
 
-#...상단 Tab 꾸미기
+#...페이지 세팅
 st.set_page_config(
     page_title="Github Top10",
     page_icon="👍",
-    layout="centered",
+    layout="wide",
 )
 
 #...폰트 설정
