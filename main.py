@@ -4,24 +4,26 @@ import requests
 from datetime import datetime, timedelta
 import plotly.express as px
 
-# 1. font-face 선언: 앱 내 상대경로로 지정
-st.markdown("""
-<style>
-@font-face {
-    font-family: 'Gowun Batang';
-    src: url('fonts/GowunBatang-Regular.ttf') format('ttf');
-    font-weight: normal;
-    font-style: normal;
-}
-html, body, [class^="css"] {
-    font-family: 'Gowun Batang', serif !important;
-}
-</style>
-""", unsafe_allow_html=True)
+st.set_page_config(
+    page_title="Github Top10",
+    page_icon="👍",
+    layout="centered",
+)
 
-st.title("내부 폰트 적용 예시")
-st.write("이 텍스트가 'Noto Serif KR' 폰트로 보이면 성공입니다!")
-
+st.markdown(
+    """
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Gowun+Batang&family=Noto+Serif+KR:wght@200..900&family=Orbit&family=Poor+Story&display=swap');
+    html, body, [class*="css"]  {
+        font-family: 'Orbit', sans-serif !important;
+    }
+    * {
+        font-family: 'Orbit', sans-serif !important;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 st.title("GitHub 인기 레포지토리 TOP 10 (최근 1주일, Python)")
 
