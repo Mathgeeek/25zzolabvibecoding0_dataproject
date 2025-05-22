@@ -27,6 +27,9 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+# 메인 페이지
+# 페이지 이름: 🏠 대시보드
+
 #...page title
 st.title("GitHub 인기👍 repository TOP 10 (최근 1주일, Python)")
 
