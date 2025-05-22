@@ -62,7 +62,7 @@ def get_github_trending_repos(token, language='python', top_n=10):
 df = get_github_trending_repos(token)
 if not df.empty:
     st.dataframe(df)
-    fig = px.bar(df, x="이름", y="Stars", hover_data=["설명"], title="TOP 10 Star 레포지토리")
+    fig = px.bar(df, x="이름", y="Stars", hover_data=["설명"], title="TOP 10 Star repository")
     st.plotly_chart(fig)
     st.markdown("---")
     for i, row in df.iterrows():
