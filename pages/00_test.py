@@ -57,7 +57,7 @@ if repo_full_name:
     )
     st.plotly_chart(fig, use_container_width=True)
     
-    st.markdown("#### 🏆 TOP 3 기여자 (가로 정렬)")
+    st.markdown("#### 🏆 TOP 3 기여자)")
 
     top3 = df_contrib.sort_values(by="커밋수", ascending=False).head(3)
     cols = st.columns(3)  # 3개의 열 생성
