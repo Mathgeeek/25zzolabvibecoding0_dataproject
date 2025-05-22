@@ -44,7 +44,7 @@ def get_contributors(token, repo_full_name, top_n=10):
 repo_full_name, repo_url = get_top_repo(token)
 
 if repo_full_name:
-    st.markdown(f"**Best Python repository : ** [{repo_full_name}]({repo_url})")
+    st.markdown(f"**Best Python repository:** [{repo_full_name}]({repo_url})")
     df_contrib = get_contributors(token, repo_full_name, top_n=15)
     st.dataframe(df_contrib)
     fig = px.bar(
