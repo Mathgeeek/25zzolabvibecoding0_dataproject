@@ -41,6 +41,8 @@ def get_contributors(token, repo_full_name, top_n=10):
         })
     return pd.DataFrame(data)
 
+repo_full_name, repo_url = get_top_repo(token)
+
 if repo_full_name:
     st.markdown(f"**Best Python repository : ** [{repo_full_name}]({repo_url})")
     df_contrib = get_contributors(token, repo_full_name, top_n=15)
@@ -58,7 +60,6 @@ if repo_full_name:
     st.markdown("#### 🏆 TOP 3 기여자 (프로필 사진 포함)")
     top3 = df_contrib.sort_values(by="커밋수", ascending=False).head(3)
     for i, row in top3.iterrows():
-        # 프로필 이미지, 닉네임, 커밋수, 링크를 한 줄로 보여줌
         st.markdown(
             f'<div style="display:flex;align-items:center;margin-bottom:1em">'
             f'<img src="{row["avatar_url"]}" width="48" style="border-radius:50%;margin-right:12px">'
