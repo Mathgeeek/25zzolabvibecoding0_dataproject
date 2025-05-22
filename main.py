@@ -4,12 +4,14 @@ import requests
 from datetime import datetime, timedelta
 import plotly.express as px
 
+#...상단 Tab 꾸미기
 st.set_page_config(
     page_title="Github Top10",
     page_icon="👍",
     layout="centered",
 )
 
+#...폰트 설정
 st.markdown(
     """
     <style>
@@ -25,9 +27,10 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-st.title("GitHub 인기 레포지토리 TOP 10 (최근 1주일, Python)")
+#...page title
+st.title("GitHub 인기👍 repository TOP 10 (최근 1주일, Python)")
 
-# secrets에 저장된 토큰 불러오기
+#...secrets에 저장된 토큰 불러오기
 token = st.secrets["GITHUB_TOKEN"]
 
 def get_github_trending_repos(token, language='python', top_n=10):
