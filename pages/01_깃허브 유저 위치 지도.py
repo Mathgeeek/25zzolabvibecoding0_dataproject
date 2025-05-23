@@ -4,6 +4,18 @@ import requests
 import folium
 from streamlit_folium import st_folium
 
+st.markdown("""
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbit&display=swap');
+    html, body, [class*="css"]  {
+        font-family: 'Orbit', sans-serif !important;
+    }
+    * {
+        font-family: 'Orbit', sans-serif !important;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
 st.title("깃허브 레포 기여자 위치 지도")
 
 # 1. Streamlit으로 레포 경로 입력받기
