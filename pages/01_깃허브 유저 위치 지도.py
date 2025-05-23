@@ -11,7 +11,7 @@ repo = st.text_input("레포 전체 이름을 입력하세요 (예: python/cpyth
 token = st.secrets.get("GITHUB_TOKEN")
 headers = {"Authorization": f"token {token}"} if token else {}
 
-def get_contributors(repo, top_n=5):
+def get_contributors(repo, top_n=15):
     url = f"https://api.github.com/repos/{repo}/contributors"
     r = requests.get(url, headers=headers)   # ← 여기에 headers!
     if r.status_code != 200:
