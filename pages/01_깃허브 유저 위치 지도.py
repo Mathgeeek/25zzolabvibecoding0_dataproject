@@ -5,15 +5,18 @@ import folium
 from streamlit_folium import st_folium
 
 st.title("깃허브 레포 기여자 위치 지도")
-repo = st.text_input("레포 전체 이름을 입력하세요 (예: python/cpython)", "python/cpython")
+repo = st.text_input("레포 전체 이름을 입력하세요 (예: python/cpython)", "python/cpython").strip()
 
-# Streamlit Cloud secrets에 저장한 토큰을 불러옴
+st.write("입력 repo:", repo)  # 입력값 확인
+st.write(f"API URL: https://api.github.com/repos/{repo}/contributors")  # API URL 확인
+
 token = st.secrets.get("GITHUB_TOKEN")
 headers = {"Authorization": f"token {token}"} if token else {}
 
 def get_contributors(repo, top_n=15):
     url = f"https://api.github.com/repos/{repo}/contributors"
-    r = requests.get(url, headers=headers)   # ← 여기에 headers!
+    r = requests.get(url, headers=headers)
+    st.write("Contributors API status code:", r.status_code)  # 상태코드 출력
     if r.status_code != 200:
         st.error(f"깃허브 API 에러: {r.text}")
         return []
@@ -35,7 +38,7 @@ def get_location_coords(location):
 usernames = get_contributors(repo)
 rows = []
 for user in usernames:
-    info = requests.get(f"https://api.github.com/users/{user}", headers=headers).json()  # ← 여기도 headers!
+    info = requests.get(f"https://api.github.com/users/{user}", headers=headers).json()
     loc = info.get("location")
     lat, lon = get_location_coords(loc)
     if lat and lon:
