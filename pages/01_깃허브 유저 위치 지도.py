@@ -4,27 +4,18 @@ import requests
 import folium
 from streamlit_folium import st_folium
 
-st.markdown("""
-    <style>
-    @import url('https://fonts.googleapis.com/css2?family=Orbit&display=swap');
-    html, body, [class*="css"]  {
-        font-family: 'Orbit', sans-serif !important;
-    }
-    * {
-        font-family: 'Orbit', sans-serif !important;
-    }
-    </style>
-""", unsafe_allow_html=True)
-
 st.title("깃허브 레포 기여자 위치 지도")
-
-# 1. Streamlit으로 레포 경로 입력받기
 repo = st.text_input("레포 전체 이름을 입력하세요 (예: python/cpython)", "python/cpython")
 
-def get_contributors(repo, top_n=20):
+# Streamlit Cloud secrets에 저장한 토큰을 불러옴
+token = st.secrets.get("GITHUB_TOKEN")
+headers = {"Authorization": f"token {token}"} if token else {}
+
+def get_contributors(repo, top_n=5):
     url = f"https://api.github.com/repos/{repo}/contributors"
-    r = requests.get(url)
+    r = requests.get(url, headers=headers)   # ← 여기에 headers!
     if r.status_code != 200:
+        st.error(f"깃허브 API 에러: {r.text}")
         return []
     return [item["login"] for item in r.json()][:top_n]
 
@@ -41,12 +32,10 @@ def get_location_coords(location):
         return None, None
     return None, None
 
-# 2. contributors 자동 추출
 usernames = get_contributors(repo)
-
 rows = []
 for user in usernames:
-    info = requests.get(f"https://api.github.com/users/{user}").json()
+    info = requests.get(f"https://api.github.com/users/{user}", headers=headers).json()  # ← 여기도 headers!
     loc = info.get("location")
     lat, lon = get_location_coords(loc)
     if lat and lon:
@@ -60,6 +49,7 @@ for user in usernames:
         })
 
 df = pd.DataFrame(rows)
+st.write(df)  # 데이터 확인용
 
 if not df.empty:
     m = folium.Map(location=[df.lat.mean(), df.lon.mean()], zoom_start=2)
